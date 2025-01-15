@@ -1,0 +1,78 @@
+--bảng Customer thông tin người dùng
+CREATE TABLE customer (
+    customer_id INT PRIMARY KEY AUTO_INCREMENT,
+    full_name VARCHAR(255),
+    phone_number VARCHAR(15) UNIQUE,
+    identity_card_number VARCHAR(20),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+--Bảng User: thông tin đăng nhập 
+CREATE TABLE user (
+    user_id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(15) UNIQUE,  -- Sử dụng số điện thoại làm username
+    password VARCHAR(255),        -- Mật khẩu đã mã hóa
+    role ENUM('admin', 'employee', 'customer'),
+    customer_id INT NULL,         -- Liên kết với bảng customer (chỉ với khách hàng)
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+--Bảng Quản lí hồ sơ ô tô
+CREATE TABLE car_profile (
+    car_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_id INT,
+    license_plate VARCHAR(20) UNIQUE,
+    brand VARCHAR(50),
+    model VARCHAR(50),
+    year INT,
+    VIN VARCHAR(50),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+);
+
+--Bảng Spare_parts: quản lí linh kiện
+CREATE TABLE spare_parts (
+    part_id INT PRIMARY KEY AUTO_INCREMENT,
+    part_name VARCHAR(100),
+    part_code VARCHAR(50) UNIQUE,
+    quantity INT,
+    price DECIMAL(10, 2),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+--Bảng quản lí lịch đặt sửa xe 
+CREATE TABLE schedule (
+    schedule_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_id INT,
+    car_id INT,
+    service_date DATETIME,
+    status ENUM('pending', 'in progress', 'completed'),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
+    FOREIGN KEY (car_id) REFERENCES car_profile(car_id)
+);
+
+--Quản lí báo cáo bao gồm thông tin về ô tô, linh kiện, người dùng, đặt lịch
+CREATE TABLE reports (
+    report_id INT PRIMARY KEY AUTO_INCREMENT,
+    report_type ENUM('vehicle', 'spare_parts', 'user', 'schedule'),
+    generated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    report_data TEXT -- Dữ liệu báo cáo dưới dạng text (có thể dùng JSON hoặc định dạng khác)
+);
+
+--Quản lí hóa đơn 
+CREATE TABLE invoice (
+    invoice_id INT PRIMARY KEY AUTO_INCREMENT,
+    schedule_id INT,  -- Liên kết với bảng đặt lịch
+    total_amount DECIMAL(10, 2),
+    payment_status ENUM('pending', 'paid'),
+    generated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (schedule_id) REFERENCES schedule(schedule_id)
+);
+
