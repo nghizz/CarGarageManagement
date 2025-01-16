@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Danh sách lịch sử bảo dưỡng</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    button {
+      padding: 10px 15px;
+      font-size: 14px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #maintenanceTable {
+      width: 90%;
+      margin: 20px auto;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    #maintenanceTable th, #maintenanceTable td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    #maintenanceTable th {
+      background-color: #f8f8f8;
+      font-weight: bold;
+    }
+
+    #maintenanceTable tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    #maintenanceTable tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .modal-content {
+      background-color: #fff;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 50%;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    input[type="submit"] {
+      background-color: #28a745;
+      color: white;
+      border: none;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Danh sách lịch sử bảo dưỡng</h1>
+
+  <button id="myBtn">Thêm lịch sử bảo dưỡng</button>
+
+  <table id="maintenanceTable">
+    <thead>
+      <tr>
+        <th>Mã lịch sử</th>
+        <th>Biển số xe</th>
+        <th>Tên khách hàng</th>
+        <th>Dịch vụ thực hiện</th>
+        <th>Phụ tùng thay thế</th>
+        <th>Nhân viên kỹ thuật</th>
+        <th>Ngày thực hiện</th>
+        <th>Trạng thái</th>
+        <th>Tổng chi phí</th>
+        <th>Thao tác</th>
+      </tr>
+    </thead>
+    <tbody id="maintenanceTableBody">
+      <!-- Dữ liệu sẽ được tải từ API và chèn vào đây -->
+    </tbody>
+  </table>
+
+  <div id="myModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Thêm lịch sử bảo dưỡng</h2>
+      <form id="maintenanceForm">
+        <label for="licensePlate">Biển số xe:</label>
+        <input type="text" id="licensePlate" name="licensePlate"><br><br>
+
+        <label for="customerName">Tên khách hàng:</label>
+        <input type="text" id="customerName" name="customerName"><br><br>
+
+        <label for="services">Dịch vụ thực hiện:</label>
+        <select id="services" name="services" multiple>
+          <option value="thay_dau">Thay dầu</option>
+          <option value="bao_duong_dieu_hoa">Bảo dưỡng điều hòa</option>
+          <option value="sua_chua_gam">Sửa chữa gầm</option>
+        </select><br><br>
+
+        <label for="spareParts">Phụ tùng thay thế:</label>
+        <input type="text" id="spareParts" name="spareParts"><br><br>
+
+        <label for="technician">Nhân viên kỹ thuật:</label>
+        <input type="text" id="technician" name="technician"><br><br>
+
+        <label for="serviceDate">Ngày thực hiện:</label>
+        <input type="date" id="serviceDate" name="serviceDate"><br><br>
+
+        <label for="status">Trạng thái:</label>
+        <select id="status" name="status">
+          <option value="hoan_thanh">Hoàn thành</option>
+          <option value="dang_cho">Đang chờ</option>
+        </select><br><br>
+
+        <label for="totalCost">Tổng chi phí:</label>
+        <input type="number" id="totalCost" name="totalCost"><br><br>
+
+        <input type="submit" value="Lưu">
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Hàm để tải dữ liệu từ API và cập nhật bảng
+    function loadMaintenanceData() {
+      fetch('/api/maintenances')
+        .then(response => response.json())
+        .then(data => {
+          const tableBody = document.getElementById('maintenanceTableBody');
+          tableBody.innerHTML = ''; // Xóa dữ liệu cũ trong bảng
+
+          data.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${item.id}</td>
+              <td>${item.licensePlate}</td>
+              <td>${item.customerName}</td>
+              <td>${item.services}</td>
+              <td>${item.spareParts}</td>
+              <td>${item.technician}</td>
+              <td>${item.serviceDate}</td>
+              <td>${item.status}</td>
+              <td>${item.totalCost} VND</td>
+              <td>
+                <button onclick="deleteMaintenance(${item.id})">Xóa</button>
+              </td>
+            `;
+            tableBody.appendChild(row);
+          });
+        })
+        .catch(error => {
+          console.error('Lỗi khi lấy dữ liệu:', error);
+        });
+    }
+
+    // Hàm để xóa một lịch sử bảo dưỡng
+    function deleteMaintenance(id) {
+      if (confirm('Bạn có chắc chắn muốn xóa lịch sử bảo dưỡng này?')) {
+        fetch(`/api/maintenances/${id}`, {
+          method: 'DELETE',
+        })
+        .then(response => {
+          if (response.ok) {
+            alert('Đã xóa lịch sử bảo dưỡng!');
+            loadMaintenanceData(); // Tải lại dữ liệu sau khi xóa
+          } else {
+            alert('Xóa lịch sử bảo dưỡng thất bại!');
+          }
+        })
+        .catch(error => {
+          console.error('Lỗi khi xóa:', error);
+          alert('Đã xảy ra lỗi!');
+        });
+      }
+    }
+
+    // Hàm xử lý sự kiện khi form được gửi
+    const form = document.getElementById('maintenanceForm');
+    form.addEventListener('submit', (event) => {
+      event.preventDefault(); // Ngăn chặn form gửi theo mặc định
+
+      const licensePlate = document.getElementById('licensePlate').value;
+      const customerName = document.getElementById('customerName').value;
+      const services = Array.from(document.getElementById('services').selectedOptions)
+        .map(option => option.value);
+      const spareParts = document.getElementById('spareParts').value;
+      const technician = document.getElementById('technician').value;
+      const serviceDate = document.getElementById('serviceDate').value;
+      const status = document.getElementById('status').value;
+      const totalCost = document.getElementById('totalCost').value;
+
+      const maintenance = {
+        licensePlate,
+        customerName,
+        services,
+        spareParts,
+        technician,
+        serviceDate,
+        status,
+        totalCost
+      };
+
+      fetch('/api/maintenances', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(maintenance)
+      })
+      .then(response => {
+        if (response.ok) {
+          alert('Thêm lịch sử bảo dưỡng thành công!');
+          loadMaintenanceData(); // Tải lại dữ liệu
+          document.getElementById('myModal').style.display = 'none';
+        } else {
+          alert('Thêm lịch sử bảo dưỡng thất bại!');
+        }
+      })
+      .catch(error => {
+        console.error('Lỗi:', error);
+        alert('Đã xảy ra lỗi!');
+      });
+    });
+
+    // Mở modal để thêm lịch sử bảo dưỡng
+    const modal = document.getElementById('myModal');
+    const btn = document.getElementById('myBtn');
+    const span = document.getElementsByClassName('close')[0];
+
+    btn.onclick = function() {
+      modal.style.display = 'block';
+    };
+
+    span.onclick = function() {
+      modal.style.display = 'none';
+    };
+
+    window.onclick = function(event) {
+      if (event.target === modal) {
+        modal.style.display = 'none';
+      }
+    };
+
+    // Tải dữ liệu khi trang được load
+    window.onload = loadMaintenanceData;
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Trang chủ</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+
+        .navbar {
+            background-color: #007bff;
+        }
+
+        .navbar-brand {
+            color: #fff;
+        }
+
+        .navbar-nav .nav-link {
+            color: #fff;
+        }
+
+        .card {
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            <i class="fas fa-car"></i> Quản lý Gara Ô tô
+        </a>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="/images/anh1.png" class="card-img-top" alt="Quản lý dịch vụ">
+                <div class="card-body">
+                    <h5 class="card-title">Quản lý dịch vụ sửa chữa, bảo dưỡng</h5>
+                    <p class="card-text">Quản lý các dịch vụ sửa chữa, bảo dưỡng định kỳ cho xe, bao gồm lập lịch hẹn, kiểm tra tình trạng xe, xử lý sự cố, thay thế phụ tùng.</p>
+                    <a href="/api/maintenance" class="btn btn-primary">Xem chi tiết</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="/images/anh2.png" class="card-img-top" alt="Quản lý kho phụ tùng">
+                <div class="card-body">
+                    <h5 class="card-title">Quản lý kho phụ tùng</h5>
+                    <p class="card-text">Kiểm soát tồn kho các loại phụ tùng thay thế, đảm bảo cung cấp đủ các bộ phận cần thiết.</p>
+                    <a href="#" class="btn btn-primary">Xem chi tiết</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="/images/anh3.png" class="card-img-top" alt="Lập hóa đơn">
+                <div class="card-body">
+                    <h5 class="card-title">Lập hóa đơn, thanh toán</h5>
+                    <p class="card-text">Quản lý hóa đơn và thanh toán cho khách hàng, đảm bảo tính chính xác và minh bạch.</p>
+                    <a href="#" class="btn btn-primary">Xem chi tiết</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="/images/anh4.png" class="card-img-top" alt="Quản lý lịch trình">
+                <div class="card-body">
+                    <h5 class="card-title">Quản lý lịch trình và nhân sự</h5>
+                    <p class="card-text">Điều phối công việc, sắp xếp lịch làm việc và đảm bảo nhân sự có mặt kịp thời.</p>
+                    <a href="#" class="btn btn-primary">Xem chi tiết</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="/images/anh5.png" class="card-img-top" alt="Kiểm tra chất lượng">
+                <div class="card-body">
+                    <h5 class="card-title">Kiểm tra và đánh giá chất lượng dịch vụ</h5>
+                    <p class="card-text">Đảm bảo chất lượng dịch vụ đạt tiêu chuẩn, theo dõi và cải thiện dựa trên phản hồi.</p>
+                    <a href="/api/maintenance" class="btn btn-primary">Xem chi tiết</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="/images/anh6.png" class="card-img-top" alt="Quản lý khách hàng">
+                <div class="card-body">
+                    <h5 class="card-title">Quản lý khách hàng</h5>
+                    <p class="card-text">Lưu trữ thông tin khách hàng, lịch sử sửa chữa và cung cấp dịch vụ chăm sóc.</p>
+                    <a href="#" class="btn btn-primary">Xem chi tiết</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="/images/anh7.png" class="card-img-top" alt="Quản lý tài chính">
+                <div class="card-body">
+                    <h5 class="card-title">Quản lý tài chính</h5>
+                    <p class="card-text">Theo dõi doanh thu, chi phí, lợi nhuận, lên kế hoạch tài chính.</p>
+                    <a href="#" class="btn btn-primary">Xem chi tiết</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
