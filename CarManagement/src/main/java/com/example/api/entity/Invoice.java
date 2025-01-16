@@ -2,12 +2,15 @@ package com.example.api.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 
@@ -24,6 +27,22 @@ public class Invoice {
     @JoinColumn(name = "schedule_id")
     private Schedule schedule;
 
+    @ManyToMany
+    @JoinTable(
+        name = "invoice_service",
+        joinColumns = @JoinColumn(name = "invoice_id"),
+        inverseJoinColumns = @JoinColumn(name = "service_id")
+    )
+    private List<Service> services;
+
+    @ManyToMany
+    @JoinTable(
+        name = "invoice_sparepart",
+        joinColumns = @JoinColumn(name = "invoice_id"),
+        inverseJoinColumns = @JoinColumn(name = "sparepart_id")
+    )
+    private List<SpareParts> spareParts;
+    
     @PrePersist
     public void prePersist() {
         this.generatedAt = LocalDateTime.now();

@@ -21,7 +21,7 @@ public class User implements UserDetails {
     private String role; // Gồm 3 loại người dùng: CUSTOMER, STAFF, ADMIN
     private String fullName;
     private String phoneNumber;
-    private String identityCardNumber;
+    private String identityCardNumber; //CCCD
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
