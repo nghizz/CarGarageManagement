@@ -6,28 +6,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
-import com.example.api.DTO.SuccessReponse;
 import com.example.api.DTO.FailResponse;
 import com.example.api.DTO.LoginRequest;
+import com.example.api.DTO.SuccessReponse;
 import com.example.api.entity.User;
 import com.example.api.security.JwtTokenProvider;
 import com.example.api.service.UserService;
 
 import jakarta.validation.Valid;
 
-@RestController
+@Controller
 @RequestMapping("/api/auth")
 public class UserController {
 	@Autowired
@@ -102,5 +103,10 @@ public class UserController {
                     .body(new FailResponse("Fail", "Tên đăng nhập hoặc mật khẩu không đúng")); 
         }
     }
-
+	
+	@GetMapping("/login")
+    public String showLoginForm() {
+        return "Login"; // Trả về view "Login.jsp"
+    }
+	
 }
